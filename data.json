@@ -1,0 +1,69 @@
+{
+  "nextId": 7,
+  "categories": [
+    {
+      "id": 0,
+      "name": "Java",
+      "sub": "core language",
+      "skills": [
+        { "name": "Java", "levels": [0, 0, 0], "links": ["", "", ""] }
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Spring",
+      "sub": "framework ecosystem",
+      "skills": [
+        { "name": "Spring Boot", "levels": [0, 0, 0], "links": ["", "", ""] },
+        { "name": "Spring JDBC", "levels": [0, 0, 0], "links": ["", "", ""] },
+        { "name": "Spring Security", "levels": [0, 0, 0], "links": ["", "", ""] },
+        { "name": "Spring Modulith", "levels": [0, 0, 0], "links": ["", "", ""] }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Frontend",
+      "sub": "UI layer",
+      "skills": [
+        { "name": "React", "levels": [0, 0, 0], "links": ["", "", ""] }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Messaging & events",
+      "sub": "async communication",
+      "skills": [
+        { "name": "Kafka", "levels": [0, 0, 0], "links": ["", "", ""] },
+        { "name": "Event-driven systems", "levels": [0, 0, 0], "links": ["", "", ""] }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "DevOps & tooling",
+      "sub": "build, ship, run",
+      "skills": [
+        { "name": "Git", "levels": [0, 0, 0], "links": ["", "", ""] },
+        { "name": "Docker", "levels": [0, 0, 0], "links": ["", "", ""] },
+        { "name": "Kubernetes", "levels": [0, 0, 0], "links": ["", "", ""] }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Systems & architecture",
+      "sub": "design patterns",
+      "skills": [
+        { "name": "Distributed systems", "levels": [0, 0, 0], "links": ["", "", ""] }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Google Cloud",
+      "sub": "cloud platform",
+      "skills": [
+        { "name": "GCP core services", "levels": [0, 0, 0], "links": ["", "", ""] },
+        { "name": "Cloud Run", "levels": [0, 0, 0], "links": ["", "", ""] },
+        { "name": "Pub/Sub", "levels": [0, 0, 0], "links": ["", "", ""] }
+      ]
+    }
+  ]
+}

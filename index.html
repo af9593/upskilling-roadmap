@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upskilling Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #f7f6f2; --surface: #ffffff; --border: #e2e0d8; --border-dashed: #ccc9be;
+  --text: #1a1a18; --text-muted: #7a7870; --text-hint: #aaa89e; --radius: 10px;
+  --mono: 'IBM Plex Mono', monospace; --sans: 'IBM Plex Sans', sans-serif;
+}
+body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; padding: 48px 24px 80px; }
+.container { max-width: 900px; margin: 0 auto; }
+header h1 { font-family: var(--mono); font-size: 26px; font-weight: 500; letter-spacing: -0.5px; margin-bottom: 5px; }
+header p { font-size: 13px; color: var(--text-muted); }
+header p strong { font-weight: 500; }
+.updated { font-family: var(--mono); font-size: 11px; color: var(--text-hint); margin-top: 4px; }
+.top-bar { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; gap: 16px; }
+.top-actions { display: flex; gap: 8px; flex-shrink: 0; padding-top: 6px; }
+.action-btn { font-family: var(--mono); font-size: 12px; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--text-muted); border-radius: 6px; padding: 6px 12px; display: inline-flex; align-items: center; gap: 5px; }
+.action-btn:hover { color: var(--text); border-color: #aaa; }
+.action-btn.primary { background: var(--text); color: var(--surface); border-color: var(--text); }
+.action-btn.primary:hover { opacity: .85; color: var(--surface); }
+
+.status-bar { font-family: var(--mono); font-size: 11px; padding: 8px 14px; border-radius: 6px; margin-bottom: 20px; display: none; }
+.status-bar.ok { display: block; background: #edf7ee; color: #1a4f1d; border: 1px solid #cfe6d0; }
+.status-bar.warn { display: block; background: #fef3e2; color: #6b3206; border: 1px solid #f0dcb8; }
+.status-bar.dirty { display: block; background: #fdf0ee; color: #7a1e14; border: 1px solid #f2cfc9; }
+
+.legend { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 28px; padding: 11px 15px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+.legend-item { display: flex; align-items: center; gap: 7px; font-size: 11px; color: var(--text-muted); font-family: var(--mono); }
+.lpips { display: flex; gap: 3px; }
+.lp { width: 12px; height: 12px; border-radius: 2px; border: 1.5px solid #bbb; }
+.lp.f { background: #bbb; }
+
+.categories { display: flex; flex-direction: column; gap: 12px; }
+.cat-block { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.cat-header { display: flex; align-items: center; gap: 10px; padding: 11px 15px; border-bottom: 1px solid var(--border); }
+.cat-tag { font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; font-family: var(--mono); }
+.cat-name { font-size: 14px; font-weight: 500; font-family: var(--mono); flex: 1; }
+.cat-sub { font-size: 12px; color: var(--text-hint); }
+.del-cat { font-size: 11px; padding: 2px 7px; border: none; background: transparent; cursor: pointer; color: var(--text-hint); border-radius: 4px; font-family: var(--mono); margin-left: 6px; }
+.del-cat:hover { color: #c0392b; background: #fdf0ee; }
+
+.skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); }
+.skill-card { padding: 13px 15px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); position: relative; }
+.skill-card:last-child { border-right: none; }
+.skill-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.skill-name { font-size: 13px; font-weight: 500; font-family: var(--mono); color: var(--text); }
+.del-skill { font-size: 10px; padding: 2px 5px; border: none; background: transparent; cursor: pointer; color: transparent; border-radius: 4px; font-family: var(--mono); }
+.skill-card:hover .del-skill { color: var(--text-hint); }
+.del-skill:hover { color: #c0392b !important; }
+
+.levels { display: flex; flex-direction: column; gap: 7px; }
+.level-row { display: flex; align-items: center; gap: 7px; min-height: 20px; }
+.level-label { font-size: 11px; color: var(--text-hint); width: 86px; flex-shrink: 0; font-family: var(--mono); }
+.pips { display: flex; gap: 3px; align-items: center; }
+.pip { width: 13px; height: 13px; border-radius: 2px; border: 1.5px solid; cursor: pointer; transition: opacity .12s; flex-shrink: 0; }
+.pip:hover { opacity: .65; }
+.link-btn { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 3px; border: 1px dashed #ccc; background: transparent; cursor: pointer; color: var(--text-hint); font-size: 11px; font-family: var(--mono); text-decoration: none; flex-shrink: 0; margin-left: 4px; transition: all .12s; line-height: 1; }
+.link-btn:hover { border-color: #888; color: var(--text); background: var(--bg); }
+.link-btn.has-link { border-style: solid; font-weight: 500; }
+.link-btn.has-link:hover { opacity: .75; }
+
+.add-row { padding: 9px 15px; border-top: 1px dashed var(--border-dashed); display: flex; align-items: center; gap: 8px; }
+.add-row input { font-family: var(--mono); font-size: 12px; border: 1px solid var(--border); border-radius: 6px; padding: 5px 10px; background: var(--bg); color: var(--text); width: 160px; outline: none; }
+.add-row input:focus { border-color: #aaa; }
+.add-row button { font-family: var(--mono); font-size: 12px; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--text-muted); border-radius: 6px; padding: 5px 10px; }
+.add-row button:hover { color: var(--text); }
+
+.add-cat-bar { margin-top: 14px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.add-cat-bar input { font-family: var(--mono); font-size: 12px; border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px; background: var(--surface); color: var(--text); outline: none; }
+.add-cat-bar input:focus { border-color: #aaa; }
+.add-cat-bar input.name { flex: 1; min-width: 140px; }
+.add-cat-bar input.sub { width: 170px; }
+
+.notice { font-size: 11px; color: var(--text-hint); font-family: var(--mono); margin-top: 16px; line-height: 1.7; }
+.notice code { background: var(--surface); padding: 1px 5px; border-radius: 3px; border: 1px solid var(--border); }
+
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 100; align-items: center; justify-content: center; }
+.modal-overlay.open { display: flex; }
+.modal-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; width: 400px; max-width: 90vw; font-family: var(--mono); }
+.modal-box h3 { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+.modal-context { font-size: 12px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; }
+.modal-links { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.modal-link-row { display: flex; flex-direction: column; gap: 4px; }
+.modal-link-row label { font-size: 11px; color: var(--text-hint); }
+.modal-link-row input { font-family: var(--mono); font-size: 12px; border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; background: var(--bg); color: var(--text); outline: none; width: 100%; }
+.modal-link-row input:focus { border-color: #888; }
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.modal-actions button { font-family: var(--mono); font-size: 12px; padding: 7px 16px; border-radius: 6px; border: 1px solid var(--border); background: transparent; cursor: pointer; color: var(--text); }
+.modal-actions button.save { background: var(--text); color: var(--surface); border-color: var(--text); }
+.modal-actions button:hover { opacity: .8; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="top-bar">
+  <header>
+    <h1>upskilling roadmap</h1>
+    <p>Reads from <strong>data.json</strong> · click pips to fill levels · click <strong>↗</strong> to attach links</p>
+    <div class="updated" id="lastUpdated"></div>
+  </header>
+  <div class="top-actions">
+    <button class="action-btn primary" id="saveBtn" onclick="downloadJSON()">&#8595; save data.json</button>
+  </div>
+</div>
+
+<div class="status-bar" id="statusBar"></div>
+
+<div class="legend">
+  <div class="legend-item"><div class="lpips"><div class="lp f"></div><div class="lp"></div><div class="lp"></div></div>[x][][] knows the basics</div>
+  <div class="legend-item"><div class="lpips"><div class="lp f"></div><div class="lp f"></div><div class="lp"></div></div>[x][x][] hands-on implementation</div>
+  <div class="legend-item"><div class="lpips"><div class="lp f"></div><div class="lp f"></div><div class="lp f"></div></div>[x][x][x] used in real project</div>
+</div>
+
+<div class="categories" id="cats"></div>
+
+<div class="add-cat-bar">
+  <input class="name" type="text" id="newCatName" placeholder="new category..." />
+  <input class="sub" type="text" id="newCatSub" placeholder="subtitle (optional)" />
+  <button class="action-btn" onclick="addCategory()">+ add category</button>
+</div>
+
+<p class="notice">
+  To persist changes: edit here → click <code>save data.json</code> → commit the downloaded file to your repo, replacing the old <code>data.json</code>.<br>
+  The page always loads your committed <code>data.json</code> on refresh, so it works across any device or browser.
+</p>
+
+</div>
+
+<div class="modal-overlay" id="linkModal">
+  <div class="modal-box">
+    <h3 id="modalTitle">add links</h3>
+    <div class="modal-context" id="modalContext"></div>
+    <div class="modal-links" id="modalLinks"></div>
+    <div class="modal-actions">
+      <button onclick="closeModal()">cancel</button>
+      <button class="save" onclick="saveLinks()">save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const COLORS = [
+  {pip:'#c0392b', tag:'#fdf0ee', tagText:'#7a1e14'},
+  {pip:'#2e7d32', tag:'#edf7ee', tagText:'#1a4f1d'},
+  {pip:'#4a3ab5', tag:'#eeedf9', tagText:'#2a2171'},
+  {pip:'#b45309', tag:'#fef3e2', tagText:'#6b3206'},
+  {pip:'#1565c0', tag:'#e8f1fb', tagText:'#0d3c78'},
+  {pip:'#7b1f52', tag:'#faeaf3', tagText:'#4a1231'},
+  {pip:'#00695c', tag:'#e0f5f1', tagText:'#003d35'},
+  {pip:'#5d3a00', tag:'#fef6e6', tagText:'#3a2300'},
+];
+const LEVEL_LABELS = ['basics', 'hands-on', 'real project'];
+const LEVEL_LABELS_LONG = ['knows the basics', 'hands-on implementation', 'used in real project'];
+
+const DEFAULT_DATA = {
+  nextId: 7,
+  categories: [
+    {id:0, name:'Java', sub:'core language', skills:[
+      {name:'Java', levels:[0,0,0], links:['','','']}
+    ]},
+    {id:1, name:'Spring', sub:'framework ecosystem', skills:[
+      {name:'Spring Boot', levels:[0,0,0], links:['','','']},
+      {name:'Spring JDBC', levels:[0,0,0], links:['','','']},
+      {name:'Spring Security', levels:[0,0,0], links:['','','']},
+      {name:'Spring Modulith', levels:[0,0,0], links:['','','']}
+    ]},
+    {id:2, name:'Frontend', sub:'UI layer', skills:[
+      {name:'React', levels:[0,0,0], links:['','','']}
+    ]},
+    {id:3, name:'Messaging & events', sub:'async communication', skills:[
+      {name:'Kafka', levels:[0,0,0], links:['','','']},
+      {name:'Event-driven systems', levels:[0,0,0], links:['','','']}
+    ]},
+    {id:4, name:'DevOps & tooling', sub:'build, ship, run', skills:[
+      {name:'Git', levels:[0,0,0], links:['','','']},
+      {name:'Docker', levels:[0,0,0], links:['','','']},
+      {name:'Kubernetes', levels:[0,0,0], links:['','','']}
+    ]},
+    {id:5, name:'Systems & architecture', sub:'design patterns', skills:[
+      {name:'Distributed systems', levels:[0,0,0], links:['','','']}
+    ]},
+    {id:6, name:'Google Cloud', sub:'cloud platform', skills:[
+      {name:'GCP core services', levels:[0,0,0], links:['','','']},
+      {name:'Cloud Run', levels:[0,0,0], links:['','','']},
+      {name:'Pub/Sub', levels:[0,0,0], links:['','','']}
+    ]}
+  ]
+};
+
+let data = [];
+let nextId = 7;
+let pendingModal = null;
+let dirty = false;
+
+function col(cat){ return COLORS[cat.id % COLORS.length]; }
+
+function setStatus(type, msg){
+  const bar = document.getElementById('statusBar');
+  bar.className = 'status-bar ' + type;
+  bar.textContent = msg;
+}
+
+function markDirty(){
+  dirty = true;
+  document.getElementById('saveBtn').textContent = '↓ save data.json •';
+  setStatus('dirty', 'Unsaved changes — click "save data.json" and commit the file to your repo to persist.');
+}
+
+async function init(){
+  try {
+    const res = await fetch('data.json?_=' + Date.now());
+    if(!res.ok) throw new Error('not found');
+    const json = await res.json();
+    data = json.categories || [];
+    nextId = json.nextId || data.length;
+    data.forEach(cat => cat.skills.forEach(s => { if(!s.links) s.links = ['','','']; }));
+    setStatus('ok', 'Loaded from data.json ✓');
+    setTimeout(()=>{ document.getElementById('statusBar').className='status-bar'; }, 2500);
+  } catch(e) {
+    data = JSON.parse(JSON.stringify(DEFAULT_DATA.categories));
+    nextId = DEFAULT_DATA.nextId;
+    setStatus('warn', 'No data.json found — showing starter roadmap. Click "save data.json" and commit it to your repo to begin.');
+  }
+  render();
+}
+
+function render(){
+  const el = document.getElementById('cats');
+  el.innerHTML = '';
+  data.forEach(cat => {
+    const c = col(cat);
+    const block = document.createElement('div');
+    block.className = 'cat-block';
+    const skillsHTML = cat.skills.map((s,si) => {
+      const levelsHTML = s.levels.map((val,li) => {
+        const filled = val > 0;
+        const pipsHTML = [0,1,2].map(pi => {
+          const on = pi < val;
+          return `<div class="pip${on?' filled':''}" style="border-color:${c.pip};${on?`background:${c.pip};`:''}" data-cat="${cat.id}" data-si="${si}" data-li="${li}" data-pi="${pi}"></div>`;
+        }).join('');
+        let linkBtn = '';
+        if(filled){
+          const hasLink = s.links && s.links[li] && s.links[li].trim();
+          if(hasLink){
+            linkBtn = `<a class="link-btn has-link" href="${s.links[li]}" target="_blank" rel="noopener" style="border-color:${c.pip};color:${c.pip}" title="${s.links[li]} — shift-click to edit" data-editlink="${cat.id}" data-editsi="${si}">↗</a>`;
+          } else {
+            linkBtn = `<button class="link-btn" data-openlink="${cat.id}" data-linksi="${si}" title="add a link for this level" style="border-color:#ccc">+</button>`;
+          }
+        }
+        return `<div class="level-row"><div class="level-label">${LEVEL_LABELS[li]}</div><div class="pips">${pipsHTML}</div>${linkBtn}</div>`;
+      }).join('');
+      return `<div class="skill-card"><div class="skill-top"><div class="skill-name">${s.name}</div><button class="del-skill" data-delcat="${cat.id}" data-delsi="${si}">✕</button></div><div class="levels">${levelsHTML}</div></div>`;
+    }).join('');
+    block.innerHTML = `<div class="cat-header"><span class="cat-tag" style="background:${c.tag};color:${c.tagText}">${String(cat.id).padStart(2,'0')}</span><span class="cat-name">${cat.name}</span><span class="cat-sub">${cat.sub||''}</span><button class="del-cat" data-delcat="${cat.id}">✕ remove</button></div><div class="skills-grid">${skillsHTML}</div><div class="add-row"><input type="text" id="ns-${cat.id}" placeholder="add skill..." /><button data-addskill="${cat.id}">+</button></div>`;
+    el.appendChild(block);
+  });
+
+  el.querySelectorAll('.pip').forEach(pip => {
+    pip.addEventListener('click', e => {
+      const {cat,si,li,pi} = e.target.dataset;
+      const skill = data.find(c=>c.id==cat).skills[si];
+      const cur = skill.levels[li];
+      const pipNum = Number(pi);
+      skill.levels[li] = pipNum < cur ? pipNum : pipNum+1;
+      if(skill.levels[li]===0 && skill.links) skill.links[li]='';
+      markDirty(); render();
+    });
+  });
+  el.querySelectorAll('[data-openlink]').forEach(btn => {
+    btn.addEventListener('click', () => openLinkModal(Number(btn.dataset.openlink), Number(btn.dataset.linksi)));
+  });
+  el.querySelectorAll('[data-editlink]').forEach(a => {
+    a.addEventListener('click', e => {
+      if(e.shiftKey){ e.preventDefault(); openLinkModal(Number(a.dataset.editlink), Number(a.dataset.editsi)); }
+    });
+  });
+  el.querySelectorAll('[data-addskill]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const catId = Number(btn.dataset.addskill);
+      const inp = document.getElementById('ns-'+catId);
+      const name = inp.value.trim(); if(!name) return;
+      data.find(c=>c.id===catId).skills.push({name, levels:[0,0,0], links:['','','']});
+      inp.value=''; markDirty(); render();
+    });
+  });
+  el.querySelectorAll('input[id^="ns-"]').forEach(inp => {
+    inp.addEventListener('keydown', e => {
+      if(e.key!=='Enter') return;
+      const catId = Number(inp.id.replace('ns-',''));
+      const name = inp.value.trim(); if(!name) return;
+      data.find(c=>c.id===catId).skills.push({name, levels:[0,0,0], links:['','','']});
+      inp.value=''; markDirty(); render();
+    });
+  });
+  el.querySelectorAll('.del-skill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      data.find(c=>c.id==btn.dataset.delcat).skills.splice(Number(btn.dataset.delsi),1);
+      markDirty(); render();
+    });
+  });
+  el.querySelectorAll('.del-cat').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const cat = data.find(c=>c.id==btn.dataset.delcat);
+      if(!confirm(`Remove "${cat?.name}"?`)) return;
+      data = data.filter(c=>c.id!=btn.dataset.delcat);
+      markDirty(); render();
+    });
+  });
+
+  document.getElementById('lastUpdated').textContent = 'last updated: ' + new Date().toLocaleDateString('en-SE',{year:'numeric',month:'long',day:'numeric'});
+}
+
+function openLinkModal(catId, si){
+  const skill = data.find(c=>c.id===catId).skills[si];
+  pendingModal = {catId, si};
+  document.getElementById('modalTitle').textContent = skill.name;
+  document.getElementById('modalContext').textContent = 'Attach a link to each completed level — GitHub repo, docs, blog post, PR, anything.';
+  const container = document.getElementById('modalLinks');
+  container.innerHTML = '';
+  skill.levels.forEach((val, li) => {
+    if(val === 0) return;
+    const row = document.createElement('div');
+    row.className = 'modal-link-row';
+    row.innerHTML = `<label>${LEVEL_LABELS_LONG[li]}</label><input type="url" id="ml-${li}" placeholder="https://github.com/you/project" value="${(skill.links&&skill.links[li])||''}" />`;
+    container.appendChild(row);
+  });
+  document.getElementById('linkModal').classList.add('open');
+  const first = container.querySelector('input');
+  if(first) setTimeout(()=>first.focus(),50);
+}
+function saveLinks(){
+  if(!pendingModal) return;
+  const {catId, si} = pendingModal;
+  const skill = data.find(c=>c.id===catId).skills[si];
+  if(!skill.links) skill.links=['','',''];
+  skill.levels.forEach((_,li) => { const inp = document.getElementById('ml-'+li); if(inp) skill.links[li] = inp.value.trim(); });
+  pendingModal = null;
+  document.getElementById('linkModal').classList.remove('open');
+  markDirty(); render();
+}
+function closeModal(){ pendingModal = null; document.getElementById('linkModal').classList.remove('open'); }
+document.getElementById('linkModal').addEventListener('click', e => { if(e.target === document.getElementById('linkModal')) closeModal(); });
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+
+function addCategory(){
+  const name = document.getElementById('newCatName').value.trim(); if(!name) return;
+  const sub = document.getElementById('newCatSub').value.trim();
+  data.push({id:nextId++, name, sub, skills:[]});
+  document.getElementById('newCatName').value=''; document.getElementById('newCatSub').value='';
+  markDirty(); render();
+}
+
+function downloadJSON(){
+  const payload = { nextId, categories: data, updated: new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'data.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  dirty = false;
+  document.getElementById('saveBtn').textContent = '↓ save data.json';
+  setStatus('ok', 'data.json downloaded ✓ — commit it to your repo to publish the changes.');
+}
+
+window.addEventListener('beforeunload', e => { if(dirty){ e.preventDefault(); e.returnValue=''; } });
+
+init();
+</script>
+</body>
+</html>
