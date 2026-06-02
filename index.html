@@ -51,6 +51,10 @@ header p strong { font-weight: 500; }
 .skill-card:last-child { border-right: none; }
 .skill-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
 .skill-name { font-size: 13px; font-weight: 500; font-family: var(--mono); color: var(--text); }
+.skill-actions { display: flex; align-items: center; gap: 6px; }
+.edit-links { font-size: 10px; padding: 2px 7px; border: 1px solid var(--border); background: transparent; cursor: pointer; color: var(--text-hint); border-radius: 4px; font-family: var(--mono); display: inline-flex; align-items: center; gap: 4px; }
+.edit-links:hover { color: var(--text); border-color: #888; background: var(--bg); }
+.edit-links i { display: inline-block; width: 9px; height: 9px; border: 1px solid currentColor; border-radius: 2px; }
 .del-skill { font-size: 10px; padding: 2px 5px; border: none; background: transparent; cursor: pointer; color: transparent; border-radius: 4px; font-family: var(--mono); }
 .skill-card:hover .del-skill { color: var(--text-hint); }
 .del-skill:hover { color: #c0392b !important; }
@@ -103,7 +107,7 @@ header p strong { font-weight: 500; }
 <div class="top-bar">
   <header>
     <h1>upskilling roadmap</h1>
-    <p>Reads from <strong>data.json</strong> · click pips to fill levels · click <strong>↗</strong> to attach links</p>
+    <p>Reads from <strong>data.json</strong> · click pips to fill levels · use <strong>edit links</strong> on a skill to attach links</p>
     <div class="updated" id="lastUpdated"></div>
   </header>
   <div class="top-actions">
@@ -246,18 +250,15 @@ function render(){
           const on = pi < val;
           return `<div class="pip${on?' filled':''}" style="border-color:${c.pip};${on?`background:${c.pip};`:''}" data-cat="${cat.id}" data-si="${si}" data-li="${li}" data-pi="${pi}"></div>`;
         }).join('');
-        let linkBtn = '';
-        if(filled){
-          const hasLink = s.links && s.links[li] && s.links[li].trim();
-          if(hasLink){
-            linkBtn = `<a class="link-btn has-link" href="${s.links[li]}" target="_blank" rel="noopener" style="border-color:${c.pip};color:${c.pip}" title="${s.links[li]} — shift-click to edit" data-editlink="${cat.id}" data-editsi="${si}">↗</a>`;
-          } else {
-            linkBtn = `<button class="link-btn" data-openlink="${cat.id}" data-linksi="${si}" title="add a link for this level" style="border-color:#ccc">+</button>`;
-          }
+        let linkEl = '';
+        if(filled && s.links && s.links[li] && s.links[li].trim()){
+          linkEl = `<a class="link-btn has-link" href="${s.links[li]}" target="_blank" rel="noopener" style="border-color:${c.pip};color:${c.pip}" title="${s.links[li]}">↗</a>`;
         }
-        return `<div class="level-row"><div class="level-label">${LEVEL_LABELS[li]}</div><div class="pips">${pipsHTML}</div>${linkBtn}</div>`;
+        return `<div class="level-row"><div class="level-label">${LEVEL_LABELS[li]}</div><div class="pips">${pipsHTML}</div>${linkEl}</div>`;
       }).join('');
-      return `<div class="skill-card"><div class="skill-top"><div class="skill-name">${s.name}</div><button class="del-skill" data-delcat="${cat.id}" data-delsi="${si}">✕</button></div><div class="levels">${levelsHTML}</div></div>`;
+      const anyFilled = s.levels.some(v => v > 0);
+      const editBtn = anyFilled ? `<button class="edit-links" data-editcat="${cat.id}" data-editsi="${si}" title="edit links for this skill"><i></i>edit links</button>` : '';
+      return `<div class="skill-card"><div class="skill-top"><div class="skill-name">${s.name}</div><div class="skill-actions">${editBtn}<button class="del-skill" data-delcat="${cat.id}" data-delsi="${si}">✕</button></div></div><div class="levels">${levelsHTML}</div></div>`;
     }).join('');
     block.innerHTML = `<div class="cat-header"><span class="cat-tag" style="background:${c.tag};color:${c.tagText}">${String(cat.id).padStart(2,'0')}</span><span class="cat-name">${cat.name}</span><span class="cat-sub">${cat.sub||''}</span><button class="del-cat" data-delcat="${cat.id}">✕ remove</button></div><div class="skills-grid">${skillsHTML}</div><div class="add-row"><input type="text" id="ns-${cat.id}" placeholder="add skill..." /><button data-addskill="${cat.id}">+</button></div>`;
     el.appendChild(block);
@@ -274,13 +275,8 @@ function render(){
       markDirty(); render();
     });
   });
-  el.querySelectorAll('[data-openlink]').forEach(btn => {
-    btn.addEventListener('click', () => openLinkModal(Number(btn.dataset.openlink), Number(btn.dataset.linksi)));
-  });
-  el.querySelectorAll('[data-editlink]').forEach(a => {
-    a.addEventListener('click', e => {
-      if(e.shiftKey){ e.preventDefault(); openLinkModal(Number(a.dataset.editlink), Number(a.dataset.editsi)); }
-    });
+  el.querySelectorAll('.edit-links').forEach(btn => {
+    btn.addEventListener('click', () => openLinkModal(Number(btn.dataset.editcat), Number(btn.dataset.editsi)));
   });
   el.querySelectorAll('[data-addskill]').forEach(btn => {
     btn.addEventListener('click', () => {
